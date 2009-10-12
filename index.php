@@ -33,7 +33,7 @@ $db = new PDO($config['db']['dsn'], $config['db']['username'], $config['db']['pa
 
 // just a normal statement
 if (isset($_REQUEST['query'])) {
-    $stmt = $db->prepare($_GET['query']);
+    $stmt = $db->prepare($_REQUEST['query']);
     
     if (isset($_REQUEST['serialize'])) {
         $serializer = new Alice\DbProxy\Serializer($stmt);

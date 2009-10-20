@@ -55,13 +55,13 @@ $db = new PDO($config['db']['dsn'], $config['db']['username'], $config['db']['pa
 if (isset($_REQUEST['query'])) {
     $stmt = $db->prepare($_REQUEST['query']);
     
+    $serializer = new Alice\DbProxy\Serializer($stmt);
+    
+    $serializer->parseParams();
+    
     if (isset($_REQUEST['serialize'])) {
-        $serializer = new Alice\DbProxy\Serializer($stmt);
-        
         echo $serializer->serialize();
     } else {
-        $stmt->execute();
-        
-        var_dump($stmt->fetchAll(PDO::FETCH_ASSOC));
+        echo $serializer->dump();
     }
 }

@@ -48,6 +48,13 @@ class Serializer
     protected $_stmt;
     
     /**
+     * Parameters
+     * 
+     * @var array
+     */
+    protected $_params = array();
+    
+    /**
      * Placeholder
      * 
      * @var string
@@ -68,10 +75,22 @@ class Serializer
         $this->_separator = $separator;
         $this->_stmt      = $stmt;
     }
+
+    public function parseParams()
+    {
+        // nothing yet
+        
+        if (isset($_REQUEST['param0'])) {
+            // we are going to look for params
+            for ($i = 0; isset($_REQUEST['param' . $i]); $i++) {
+                $this->_params[] = $_REQUEST['param' . $i];
+            }
+        }
+    }
     
     public function serialize()
     {
-        $this->_stmt->execute();
+        $this->_stmt->execute($this->_params);
         
         $data = $this->_stmt->fetchAll(PDO::FETCH_ASSOC);
         
@@ -86,5 +105,16 @@ class Serializer
         }
         
         return $return;
+    }
+    
+    public function dump()
+    {
+        $this->_stmt->execute($this->_params);
+        
+        ob_start();
+        
+        var_dump($this->_stmt->fetchAll(PDO::FETCH_ASSOC));
+        
+        return ob_get_clean();
     }
 }
